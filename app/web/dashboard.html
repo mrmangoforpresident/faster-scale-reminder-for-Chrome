@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FASTER Dashboard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="row">
+    <div>
+      <h1>FASTER Scale</h1>
+      <div class="ink-2" id="todayLine"></div>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn" href="/checkin" id="checkinBtn">New check-in</a>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button data-view="overview" class="on">Overview</button>
+    <button data-view="calendar">Calendar</button>
+    <button data-view="patterns">Patterns</button>
+    <button data-view="journal">Journal</button>
+    <button data-view="settings">Settings</button>
+  </nav>
+
+  <div class="row" id="rangeRow" style="margin-bottom:16px">
+    <span class="ink-2">Range</span>
+    <div class="seg" id="range">
+      <button data-days="30" class="on">30 days</button>
+      <button data-days="90">90 days</button>
+      <button data-days="365">1 year</button>
+      <button data-days="0">All time</button>
+    </div>
+  </div>
+
+  <section data-view="overview">
+    <div class="tiles" id="tiles"></div>
+    <div class="card">
+      <h2>Your level each day</h2>
+      <p class="muted" style="margin:2px 0 10px">The highest category you selected a behavior in that day, across all of that day's check-ins. Lower means further down the scale.</p>
+      <div class="chart" id="stageChart"></div>
+    </div>
+    <div class="card">
+      <h2>Behaviors by category over time</h2>
+      <p class="muted" style="margin:2px 0 10px" id="bhvrChartNote"></p>
+      <div class="chart" id="bhvrChart"></div>
+      <div class="legend" id="bhvrLegend"></div>
+    </div>
+  </section>
+
+  <section data-view="calendar" hidden>
+    <div class="card">
+      <div class="row"><h2>Daily level calendar</h2><div class="spacer"></div>
+        <select id="calYear" style="width:auto"></select></div>
+      <p class="muted" style="margin:2px 0 12px">Each square is a day, colored by that day's level. Empty squares are days without a check-in.</p>
+      <div class="cal-wrap"><div class="chart" id="calendar"></div></div>
+      <div class="legend" id="calLegend"></div>
+    </div>
+    <div class="card">
+      <h2>Month by month</h2>
+      <p class="muted" style="margin:2px 0 10px">Days at each level per month.</p>
+      <div class="chart" id="monthChart"></div>
+      <div class="legend" id="monthLegend"></div>
+    </div>
+  </section>
+
+  <section data-view="patterns" hidden>
+    <div class="grid-2">
+      <div class="card"><h2>Days at each level</h2><div class="chart" id="distChart"></div></div>
+      <div class="card"><h2>By day of week</h2><p class="muted" style="margin:2px 0 10px">Average level (0 = Restoration). Taller bar = further down the scale.</p><div class="chart" id="dowChart"></div></div>
+    </div>
+    <div class="card">
+      <h2>Most frequently selected behaviors</h2>
+      <p class="muted" style="margin:2px 0 10px">Forgetting Priorities through Relapse/Moral Failure.</p>
+      <div id="topSigns"></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h2>Most frequent Restoration behaviors</h2>
+        <div id="topStrengths"></div>
+      </div>
+      <div class="card">
+        <h2>Behaviors by category</h2>
+        <p class="muted" style="margin:2px 0 10px">Every behavior selected in this range.</p>
+        <div class="chart" id="catChart"></div>
+      </div>
+    </div>
+  </section>
+
+  <section data-view="journal" hidden>
+    <div class="card">
+      <div class="row">
+        <h2>Journal</h2><div class="spacer"></div>
+        <select id="journalFilter" style="width:auto"></select>
+        <a class="btn" href="/api/export.csv">Export CSV</a>
+        <a class="btn" href="/api/export.json">Export JSON</a>
+      </div>
+      <div id="journal" style="margin-top:8px"></div>
+    </div>
+  </section>
+
+  <section data-view="settings" hidden>
+    <div class="card stack" style="max-width:720px">
+      <h2>Settings</h2>
+      <label class="field"><span>A new day starts at</span>
+        <select id="sDayStart" style="width:auto"></select>
+        <div class="muted">Activity before this hour still counts as the previous day.</div></label>
+      <label class="row"><input type="checkbox" id="sPopup"> Pop up the check-in window automatically</label>
+      <label class="row"><input type="checkbox" id="sTop"> Keep the check-in window on top until it's done</label>
+      <label class="row"><input type="checkbox" id="sHourly"> After the first check-in, pop up again every
+        <input type="number" id="sHourlyMin" min="15" max="480" style="width:80px"> minutes</label>
+      <div class="muted" style="margin-top:-6px">Hourly pop-ups don't block websites. Close the window to skip until the next one; checking in early resets the timer.</div>
+      <label class="field"><span>Browser for the pop-up</span>
+        <select id="sBrowser" style="width:auto"><option value="auto">Auto (Chrome, then Edge)</option><option value="chrome">Chrome</option><option value="edge">Edge</option></select></label>
+      <label class="field"><span>Re-open the window this many seconds after it's closed without checking in</span>
+        <input type="number" id="sCooldown" min="30" max="3600" style="width:120px"></label>
+      <h3 style="margin-top:20px">Behavior list</h3>
+      <div class="row"><span class="ink-2" id="bhvrSource"></span><div class="spacer"></div><button id="reimport">Re-download from fasterscaleapp.com</button></div>
+      <h3 style="margin-top:12px">Custom behaviors</h3>
+      <p class="muted" style="margin:0">Like fasterscaleapp.com's custom behaviors: add your own to any category, one per line. They appear in the check-in after the standard ones.</p>
+      <div id="customFields" class="stack"></div>
+      <div class="row"><button class="primary" id="saveSettings">Save settings</button><span id="settingsMsg" class="muted"></span></div>
+    </div>
+    <div class="card" style="max-width:720px">
+      <h3>Where your data lives</h3>
+      <p class="ink-2" style="margin:4px 0 0">Everything is stored on this computer only, in <code>%USERPROFILE%\FasterScale\data\faster.db</code> (SQLite), with a rolling 14-day backup in the <code>backups</code> folder next to it. Nothing is sent anywhere.</p>
+    </div>
+  </section>
+</div>
+<div class="tooltip" id="tip"></div>
+<script src="/static/faster.js"></script>
+<script src="/static/charts.js"></script>
+<script src="/static/dashboard.js"></script>
+</body>
+</html>

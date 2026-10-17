@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FASTER Check-in</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="wrap" style="max-width: 880px">
+  <div class="row">
+    <div>
+      <h1>Daily FASTER check-in</h1>
+      <div class="ink-2" id="dayLabel"></div>
+    </div>
+    <div class="spacer"></div>
+    <a class="btn" href="/dashboard" id="dashLink">Dashboard</a>
+  </div>
+
+  <div id="already" class="banner" hidden></div>
+
+  <form id="form" autocomplete="off">
+    <!-- Step 1: behaviors (fasterscaleapp.com check-in) -->
+    <div id="step1">
+      <div class="card">
+        <div class="row"><h2>Step 1 of 2 · Behaviors</h2><div class="spacer"></div><span class="muted" id="sourceNote"></span></div>
+        <p class="muted" style="margin:4px 0 0">Select every behavior that applies to you today. Be honest; nobody sees this but you.</p>
+        <div id="stages"></div>
+      </div>
+      <div class="sticky-submit row">
+        <span id="level1" class="ink-2"></span>
+        <span id="err1" class="error"></span>
+        <div class="spacer"></div>
+        <button type="button" class="primary" id="next">Continue to questions</button>
+      </div>
+    </div>
+
+    <!-- Step 2: questions, one behavior per category -->
+    <div id="step2" hidden>
+      <div class="card">
+        <h2>Step 2 of 2 · Questions</h2>
+        <p class="muted" style="margin:4px 0 0">In each category, select one behavior, then answer the related questions. Answers are optional.</p>
+        <p id="level2" style="margin:10px 0 0"></p>
+      </div>
+      <div id="questions"></div>
+      <div class="sticky-submit row">
+        <button type="button" id="back">Back</button>
+        <span id="err" class="error"></span>
+        <div class="spacer"></div>
+        <button type="submit" class="primary" id="submit">Save check-in</button>
+      </div>
+    </div>
+  </form>
+
+  <div id="done" class="card" hidden>
+    <h2>Check-in saved</h2>
+    <p class="ink-2" id="doneText"></p>
+    <div class="row">
+      <a class="btn" href="/dashboard">Open dashboard</a>
+      <a class="btn" id="continueLink" hidden>Continue to your page</a>
+      <button type="button" id="closeBtn" hidden>Close window</button>
+    </div>
+  </div>
+</div>
+<script src="/static/faster.js"></script>
+<script src="/static/checkin.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "FASTER Check-in Gate",
+  "version": "1.0.0",
+  "description": "Redirects websites to your daily FASTER Scale check-in until today's check-in is done.",
+  "permissions": ["declarativeNetRequest", "alarms", "tabs"],
+  "host_permissions": ["<all_urls>"],
+  "background": { "service_worker": "background.js" },
+  "incognito": "spanning",
+  "web_accessible_resources": [{ "resources": ["gate.html"], "matches": ["<all_urls>"] }],
+  "action": { "default_title": "FASTER check-in", "default_icon": { "16": "icon16.png", "48": "icon48.png" } },
+  "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" }
+}
